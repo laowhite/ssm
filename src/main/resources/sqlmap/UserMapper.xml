@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://www.mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!-- 对应的Mapper接口文件, ctrl+鼠标左键  可检验路径是否正确-->
+<mapper namespace="com.ssm.dao.UserMapper">
+<!-- 对应的实体类  -->
+<resultMap id="user" type="com.ssm.entity.User">
+		<id column="id" jdbcType="INTEGER" property="id"/>
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="age" jdbcType="VARCHAR" property="age" />	
+	</resultMap>
+	
+	<!-- 对应接口的方法 -->
+	<select id="getUserById"  resultMap="user">
+		SELECT * FROM user_d where id=#{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.ssm.entity.UserD">
+	    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        	SELECT  REPLACE(UUID(),'-','')  
+  		</selectKey>
+	    insert into user_d (id, name, password, 
+	      age)
+	    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+	      #{age,jdbcType=VARCHAR})
+ 	 </insert>
+	
+	<update id="update" parameterType="map">
+	    update user_d
+	    <set>
+	      <if test="record.id != null">
+	        id = #{record.id,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.name != null">
+	        name = #{record.name,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.password != null">
+	        password = #{record.password,jdbcType=VARCHAR},
+	      </if>
+	      <if test="record.age != null">
+	        age = #{record.age,jdbcType=VARCHAR},
+	      </if>
+	    </set>
+	     WHERE id = #{record.id,jdbcType=VARCHAR}
+	  </update>
+		
+</mapper>
